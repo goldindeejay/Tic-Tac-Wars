@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Wars</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="game-title">
+            <div>T</div>
+            <div>I</div>
+            <div>C</div>
+            <div>T</div>
+            <div>A</div>
+            <div>C</div>
+            <div>W</div>
+            <div>A</div>
+            <div>R</div>
+            <div class="letter-s">S</div>
+        </h1>
+        
+        <!-- Spielmodus-Auswahl -->
+        <div class="mode-container">
+            <div class="mode-section">
+                <div class="mode-title">Spielmodus</div>
+                <div class="mode-buttons">
+                    <button id="computer" class="mode-button active">Gegen Computer</button>
+                    <button id="human" class="mode-button">Mensch vs. Mensch</button>
+                </div>
+            </div>
+            
+            <div class="mode-section difficulty-container">
+                <div class="mode-title">Schwierigkeitsgrad</div>
+                <div class="difficulty-buttons">
+                    <button id="easy" class="difficulty-button">Leicht</button>
+                    <button id="middle" class="difficulty-button active">Mittel</button>
+                    <button id="hard" class="difficulty-button">Schwer</button>
+                </div>
+            </div>
+            
+            <div class="mode-section">
+                <div class="mode-title">Spielfeldgröße</div>
+                <div class="board-size-buttons">
+                    <button id="size-3" class="board-size-button active">3x3</button>
+                    <button id="size-5" class="board-size-button">5x5</button>
+                    <button id="size-7" class="board-size-button">7x7</button>
+                </div>
+            </div>
+            
+            <div class="mode-section">
+                <div class="mode-title">Dein Symbol</div>
+                <div class="symbol-buttons">
+                    <button class="symbol-button active">X</button>
+                    <button class="symbol-button">O</button>
+                </div>
+            </div>
+            
+            <div class="mode-section special-fields-container">
+                <div class="special-fields-title">Spezielle Felder</div>
+                <div class="special-field-option">
+                    <label class="switch">
+                        <input type="checkbox" id="special-fields-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="toggle-label">Aktivieren</span>
+                </div>
+                
+                <div class="special-fields-options">
+                    <div class="special-field-option">
+                        <label class="switch">
+                            <input type="checkbox" id="bomb-fields-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="toggle-label">Bombenfelder</span>
+                    </div>
+                    <div class="special-field-description">Entfernt alle Symbole in einem 3x3-Bereich.</div>
+                    
+                    <div class="special-field-option">
+                        <label class="switch">
+                            <input type="checkbox" id="shield-fields-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="toggle-label">Schildfelder</span>
+                    </div>
+                    <div class="special-field-description">Schützt vor Bomben und anderen negativen Effekten.</div>
+                    
+                    <div class="special-field-option">
+                        <label class="switch">
+                            <input type="checkbox" id="swap-fields-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="toggle-label">Tauschfelder</span>
+                    </div>
+                    <div class="special-field-description">Tauscht zwei Felder miteinander.</div>
+                    
+                    <div class="special-field-option">
+                        <label class="switch">
+                            <input type="checkbox" id="wild-fields-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="toggle-label">Jokerfelder</span>
+                    </div>
+                    <div class="special-field-description">Zählt als beliebiges Symbol für Gewinnkombinationen.</div>
+                    
+                    <!-- Neue Spezialfelder werden dynamisch hinzugefügt -->
+                </div>
+            </div>
+            
+            <div id="playerNamesContainer" style="display: none;">
+                <div class="mode-section">
+                    <div class="mode-title">Spielernamen</div>
+                    <input type="text" id="player1Name" placeholder="Spieler 1" class="player-name-input">
+                    <input type="text" id="player2Name" placeholder="Spieler 2" class="player-name-input">
+                </div>
+            </div>
+            
+            <div id="error-text"></div>
+            
+            <button class="play-button">Starte das Spiel</button>
+        </div>
+        
+        <!-- Spielbereich -->
+        <div class="game-container">
+            <div class="status-text">Dein Zug (X)</div>
+            
+            <div class="game-board">
+                <div id="cell-container"></div>
+            </div>
+            
+            <div class="game-controls">
+                <button class="restart-button">Neues Spiel</button>
+                <button class="menu-button">Zurück zum Menü</button>
+                <button class="help-button">Hilfe</button>
+            </div>
+            
+            <div id="scores-text"></div>
+        </div>
+        
+        <!-- Tutorial und Hilfe-Bereich -->
+        <div class="tutorial-container">
+            <div class="tutorial-content">
+                <h2>Willkommen bei Tic-Tac-Wars!</h2>
+                <p>Dieses Tutorial erklärt dir die Grundlagen und Besonderheiten des Spiels.</p>
+                
+                <div class="tutorial-step" data-step="1">
+                    <h3>Grundregeln</h3>
+                    <p>Tic-Tac-Wars ist eine erweiterte Version des klassischen Tic-Tac-Toe. Ziel ist es, eine Reihe deiner Symbole zu bilden.</p>
+                    <p>Bei 3x3-Feldern benötigst du 3 in einer Reihe, bei 5x5-Feldern 4 in einer Reihe und bei 7x7-Feldern 5 in einer Reihe.</p>
+                </div>
+                
+                <div class="tutorial-step" data-step="2">
+                    <h3>Spielbeginn</h3>
+                    <p>Zu Beginn jedes Spiels wird zufällig bestimmt, wer den ersten Zug macht - du oder der Computer. Die Wahrscheinlichkeit beträgt jeweils 50%.</p>
+                </div>
+                
+                <div class="tutorial-step" data-step="3">
+                    <h3>Spezielle Felder</h3>
+                    <p>Tic-Tac-Wars bietet verschiedene Spezialfelder, die das Spiel strategischer und spannender machen:</p>
+                </div>
+                
+                <div class="tutorial-step" data-step="4">
+                    <h3>Bombenfelder</h3>
+                    <p>Bombenfelder entfernen bei Aktivierung alle Symbole in einem 3x3-Bereich um das Feld herum.</p>
+                    <div class="field-example bomb-field-example">💣</div>
+                </div>
+                
+                <div class="tutorial-step" data-step="5">
+                    <h3>Schildfelder</h3>
+                    <p>Schildfelder schützen vor Bomben und anderen negativen Effekten.</p>
+                    <div class="field-example shield-field-example">🛡️</div>
+                </div>
+                
+                <div class="tutorial-step" data-step="6">
+                    <h3>Tauschfelder</h3>
+                    <p>Tauschfelder ermöglichen es, zwei Felder auf dem Spielfeld miteinander zu tauschen.</p>
+                    <div class="field-example swap-field-example">🔄</div>
+                </div>
+                
+                <div class="tutorial-step" data-step="7">
+                    <h3>Jokerfelder</h3>
+                    <p>Jokerfelder zählen als beliebiges Symbol für Gewinnkombinationen.</p>
+                    <div class="field-example wild-field-example">🃏</div>
+                </div>
+                
+                <div class="tutorial-step" data-step="8">
+                    <h3>Kreuzfelder</h3>
+                    <p>Kreuzfelder setzen bei Aktivierung in alle horizontalen und vertikalen Richtungen ein Symbol.</p>
+                    <div class="field-example cross-field-example">➕</div>
+                </div>
+                
+                <div class="tutorial-step" data-step="9">
+                    <h3>Diagonalfelder</h3>
+                    <p>Diagonalfelder setzen bei Aktivierung in alle diagonalen Richtungen ein Symbol.</p>
+                    <div class="field-example diagonal-field-example">✖️</div>
+                </div>
+                
+                <div class="tutorial-step" data-step="10">
+                    <h3>Hilfe-Button</h3>
+                    <p>Über den Hilfe-Button kannst du jederzeit diese Informationen abrufen.</p>
+                    <p>Viel Spaß beim Spielen!</p>
+                </div>
+                
+                <div class="tutorial-navigation">
+                    <button class="tutorial-prev">Zurück</button>
+                    <div class="tutorial-dots"></div>
+                    <button class="tutorial-next">Weiter</button>
+                    <button class="tutorial-close">Schließen</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Legende für Spezialfelder -->
+        <div class="legend-container">
+            <h2>Feldtypen-Legende</h2>
+            <div class="legend-content">
+                <div class="legend-item">
+                    <div class="legend-symbol bomb-symbol">💣</div>
+                    <div class="legend-description">Bombenfeld: Entfernt alle Symbole in einem 3x3-Bereich.</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-symbol shield-symbol">🛡️</div>
+                    <div class="legend-description">Schildfeld: Schützt vor Bomben und anderen negativen Effekten.</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-symbol swap-symbol">🔄</div>
+                    <div class="legend-description">Tauschfeld: Ermöglicht das Tauschen von zwei Feldern.</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-symbol wild-symbol">🃏</div>
+                    <div class="legend-description">Jokerfeld: Zählt als beliebiges Symbol für Gewinnkombinationen.</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-symbol cross-symbol">➕</div>
+                    <div class="legend-description">Kreuzfeld: Setzt in alle horizontalen und vertikalen Richtungen ein Symbol.</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-symbol diagonal-symbol">✖️</div>
+                    <div class="legend-description">Diagonalfeld: Setzt in alle diagonalen Richtungen ein Symbol.</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-symbol corner-symbol">⭐</div>
+                    <div class="legend-description">Eckfeld: Gewährt einen Extrazug.</div>
+                </div>
+            </div>
+            <button class="legend-close">Schließen</button>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.9.3/tsparticles.bundle.min.js"></script>
+    <script src="game-logic.js"></script>
+    <script src="special-fields.js"></script>
+    <script src="effects.js"></script>
+    <script src="tutorial.js"></script>
+</body>
+</html>
